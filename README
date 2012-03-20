@@ -1,0 +1,10 @@
+**This is a work in progress, check back in later for a fully functioning library**
+
+SMTP Receipts is a working SMTP server that will act as a relay, inserting
+tracking data into your message so you can see when your recipient opens it.
+
+It was originally deployed in the productionized consumer app MailReceipts
+(www.mailreceipts.com), but the original authors (Thatcher Clay and Jon
+Hyman) decided to release it to the wild as a) a working example of a custom
+SMTP server implemented ontop of Twisted, and b) a viable relay server
+for those wishing to build their own SMTP relays.
