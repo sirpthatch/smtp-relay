@@ -10,7 +10,7 @@ from test.seed import createUser
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from server.message import SugarMessage, SugarMessageProcessor, RedirectMessageDelivery, RedirectMessage
+from core.message import SugarMessage, SugarMessageProcessor, RedirectMessageDelivery, RedirectMessage
 from mailreceipts.models import EmailRecord, CUSTOMER_LEVEL_FREE
 
 import re

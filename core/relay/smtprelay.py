@@ -8,11 +8,11 @@ from twisted.internet import ssl
 from twisted.protocols.tls import TLSMemoryBIOFactory
 
 import sys,os
-from server.smtp import *
-from server import settings
+from core.smtp import *
+from core import settings
 
 import logging, logging.config
-logging.config.fileConfig('output-sugar/server/runner/logging.conf')
+logging.config.fileConfig(settings.SMTP_RELAY_LOGGING)
 
 
 def main():
@@ -24,7 +24,8 @@ def main():
                                      django_settings.OUTBOUND_EMAIL_HOST_USER,
                                      django_settings.OUTBOUND_EMAIL_HOST_PASSWORD)
 
-  portal = Portal(SugarRealm(messenger = messenger))
+  portal = Portal(SMTPRelayRealm(messenger = messenger))
+
   checker = DjangoAuthChecker()
   portal.registerChecker(checker)
 
@@ -33,7 +34,7 @@ def main():
           'output-sugar/sugar.public.pem'
           )
 
-  sugarFactory = SugarSMTPFactory(portal,secureContextFactory)
+  sugarFactory = SMTPRelaySMTPFactory(portal,secureContextFactory)
 
   a = service.Application("SMTP Relay Server")
   internet.TCPServer(settings.SUGAR_SMTP_PORT, sugarFactory).setServiceParent(a)

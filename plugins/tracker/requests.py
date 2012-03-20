@@ -15,7 +15,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'web.settings'
 from calendar import calendar
 
 from web.mailreceipts.models import EmailEndPoint, EmailRead
-from server.alerts import send_alert
+from core.alerts import send_alert
 
 import logging
 

@@ -7,7 +7,7 @@ from twisted.trial import unittest
 from twisted.cred.credentials import UsernamePassword
 from twisted.cred.error import UnauthorizedLogin
 
-from server.smtp import DjangoAuthChecker
+from core.smtp import DjangoAuthChecker
 from test.seed import createUser
 
 class DjangoAuthCheckerTestSuite(unittest.TestCase):

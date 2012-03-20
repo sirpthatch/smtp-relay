@@ -17,7 +17,7 @@ from email import message_from_string
 import re
 import uuid
 import smtplib
-from server.messenger import SendGridMessenger
+from core.messenger import SendGridMessenger
 from web.mailreceipts.models import EmailRecord, EmailEndPoint, CUSTOMER_LEVEL_FREE
 from web.mailreceipts.lib.mailer import Mailer
 from web import settings as django_settings
