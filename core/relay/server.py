@@ -1,3 +1,4 @@
+import sys,os
 from twisted.application import internet
 from twisted.cred.portal import IRealm
 from twisted.cred.portal import Portal
@@ -6,16 +7,15 @@ from twisted.internet.ssl import PrivateCertificate
 from twisted.internet.protocol import ServerFactory
 from twisted.internet import ssl
 from twisted.protocols.tls import TLSMemoryBIOFactory
-
-import sys,os
-from core.smtp import *
+from core.relay.smtp import SMTPRelayFactory
 from core import settings
-
 import logging, logging.config
+
 logging.config.fileConfig(settings.SMTP_RELAY_LOGGING)
 
 
-def main():
+
+def create_application():
   from twisted.application import internet
   from twisted.application import service
 
@@ -34,7 +34,7 @@ def main():
           'output-sugar/sugar.public.pem'
           )
 
-  sugarFactory = SMTPRelaySMTPFactory(portal,secureContextFactory)
+  sugarFactory = SMTPRelayFactory(portal,secureContextFactory)
 
   a = service.Application("SMTP Relay Server")
   internet.TCPServer(settings.SUGAR_SMTP_PORT, sugarFactory).setServiceParent(a)
@@ -42,4 +42,5 @@ def main():
 
   return a
 
-application = main()
+# Hooks for twistd
+application = create_application()
