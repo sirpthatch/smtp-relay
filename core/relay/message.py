@@ -56,7 +56,7 @@ class ExtensibleSmtpRelayMessageDelivery(BaseSmtpRelayMessageDelivery):
   def add_validate_to(self, processor):
     original = self.validateTo
     def wrapper(user):
-			processor(self, user)
+			user = processor(self, user)
 			return original(user)
     self.validateTo = wrapper
     return self

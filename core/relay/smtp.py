@@ -1,11 +1,6 @@
-'''
-Created on Jun 13, 2011
-
-@author: thatcherclay
-'''
-
 from zope.interface import implements
 import sys,os
+import logging
 
 from twisted.internet import defer, threads
 from twisted.mail import smtp
@@ -16,14 +11,12 @@ from twisted.cred.portal import IRealm
 from twisted.cred.portal import Portal
 from twisted.internet import ssl
 
-import logging
-
-from core.relay.message import SmtpRelayMessageDelivery
+from core.relay.message import ExtensibleSmtpRelayMessageDelivery
 
 
-logger = logging.getLogger("sugar")
+logger = logging.getLogger("smtprelay")
         
-class SMTPRelayFactory(smtp.SMTPFactory):
+class SecureSMTPRelayFactory(smtp.SMTPFactory):
     protocol = smtp.ESMTP
     
     def __init__(self, portal, ctx):
@@ -42,8 +35,16 @@ class SMTPRelayRealm:
 
     def __init__(self, *args, **kwargs):
         self.messenger = kwargs["messenger"]
+        self.processors = [] if "processors" not in kwargs else kwargs["processors"]
+        self.audience_config = {"to":[], "from":[]} if "audience_filters" not in kwargs else kwargs["audience_filters"]
 
     def requestAvatar(self, user, mind, *interfaces):
         if smtp.IMessageDelivery in interfaces:
-            return smtp.IMessageDelivery, SmtpRelayMessageDelivery(user, self.messenger), lambda: None
-        raise NotImplementedError()
+          message_delivery = ExtensibleSmtpRelayMessageDelivery(user, self.messenger, self.processors)
+          for filter in self.audience_config["to"]:
+            message_delivery.add_validate_to(filter)
+          for filter in self.audience_config["to"]:
+            message_delivery.add_validate_from(filter)
+
+          return smtp.IMessageDelivery, message_delivery, lambda: None
+        raise Exception("Expecting IMessageDelivery in interfaces")

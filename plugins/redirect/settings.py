@@ -1,1 +1,0 @@
-TRACKER_LOGGING = 'plugins/tracker/logging.conf'
